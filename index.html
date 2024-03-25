@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gravador de Áudio e Transcrição</title>
+</head>
+<body>
+<h1>Gravador de Áudio e Transcrição</h1>
+<button id="startRecording">Iniciar Gravação</button>
+<div id="transcription"></div>
+
+<script>
+const startRecordingButton = document.getElementById('startRecording');
+const transcriptionDiv = document.getElementById('transcription');
+
+let recognition = new webkitSpeechRecognition();
+recognition.continuous = true;
+recognition.interimResults = true;
+
+startRecordingButton.addEventListener('click', () => {
+    recognition.start();
+});
+
+recognition.onresult = (event) => {
+    let interimTranscript = '';
+    let finalTranscript = '';
+    for (let i = event.resultIndex; i < event.results.length; i++) {
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+        } else {
+            interimTranscript += transcript;
+        }
+    }
+    transcriptionDiv.innerHTML = `
+        <p>Transcrição Interina:</p>
+        <p>${interimTranscript}</p>
+        <p>Transcrição Final:</p>
+        <p>${finalTranscript}</p>
+    `;
+};
+
+recognition.onerror = (event) => {
+    console.error('Erro de reconhecimento:', event.error);
+};
+
+recognition.onend = () => {
+    console.log('Reconhecimento de fala encerrado.');
+};
+</script>
+</body>
+</html>
