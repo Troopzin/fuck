@@ -8,10 +8,12 @@
 <body>
 <h1>Gravador de Áudio e Transcrição</h1>
 <button id="startRecording">Iniciar Gravação</button>
+<button id="stopRecording" style="display: none;">Parar Gravação</button>
 <div id="transcription"></div>
 
 <script>
 const startRecordingButton = document.getElementById('startRecording');
+const stopRecordingButton = document.getElementById('stopRecording');
 const transcriptionDiv = document.getElementById('transcription');
 
 let recognition = new webkitSpeechRecognition();
@@ -20,25 +22,22 @@ recognition.interimResults = true;
 
 startRecordingButton.addEventListener('click', () => {
     recognition.start();
+    startRecordingButton.style.display = 'none';
+    stopRecordingButton.style.display = 'block';
+});
+
+stopRecordingButton.addEventListener('click', () => {
+    recognition.stop();
+    startRecordingButton.style.display = 'block';
+    stopRecordingButton.style.display = 'none';
 });
 
 recognition.onresult = (event) => {
     let interimTranscript = '';
-    let finalTranscript = '';
     for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
-        if (event.results[i].isFinal) {
-            finalTranscript += transcript;
-        } else {
-            interimTranscript += transcript;
-        }
+        interimTranscript += event.results[i][0].transcript;
     }
-    transcriptionDiv.innerHTML = `
-        <p>Transcrição Interina:</p>
-        <p>${interimTranscript}</p>
-        <p>Transcrição Final:</p>
-        <p>${finalTranscript}</p>
-    `;
+    transcriptionDiv.textContent = interimTranscript;
 };
 
 recognition.onerror = (event) => {
