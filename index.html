@@ -1,52 +1,13 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gravador de Áudio e Transcrição</title>
+    <title>Gravador de Áudio</title>
 </head>
 <body>
-<h1>Gravador de Áudio e Transcrição</h1>
-<button id="startRecording">Iniciar Gravação</button>
-<button id="stopRecording" style="display: none;">Parar Gravação</button>
-<div id="transcription"></div>
-
-<script>
-const startRecordingButton = document.getElementById('startRecording');
-const stopRecordingButton = document.getElementById('stopRecording');
-const transcriptionDiv = document.getElementById('transcription');
-
-let recognition = new webkitSpeechRecognition();
-recognition.continuous = true;
-recognition.interimResults = true;
-
-startRecordingButton.addEventListener('click', () => {
-    recognition.start();
-    startRecordingButton.style.display = 'none';
-    stopRecordingButton.style.display = 'block';
-});
-
-stopRecordingButton.addEventListener('click', () => {
-    recognition.stop();
-    startRecordingButton.style.display = 'block';
-    stopRecordingButton.style.display = 'none';
-});
-
-recognition.onresult = (event) => {
-    let interimTranscript = '';
-    for (let i = event.resultIndex; i < event.results.length; i++) {
-        interimTranscript += event.results[i][0].transcript;
-    }
-    transcriptionDiv.textContent = interimTranscript;
-};
-
-recognition.onerror = (event) => {
-    console.error('Erro de reconhecimento:', event.error);
-};
-
-recognition.onend = () => {
-    console.log('Reconhecimento de fala encerrado.');
-};
-</script>
+    <h1>Gravador de Áudio</h1>
+    <button id="start-recording">Iniciar Gravação</button>
+    <button id="stop-recording">Parar Gravação</button>
+    <div id="recordingsList"></div>
+    <script src="script.js"></script>
 </body>
 </html>
